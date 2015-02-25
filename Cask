@@ -1,0 +1,21 @@
+(source gnu)
+(source melpa)
+
+; (package-file "cask.el")
+
+(files "*.el" "bin" "templates")
+
+(depends-on "cask")
+(depends-on "dash")
+(depends-on "epl")
+(depends-on "f")
+(depends-on "package-build")
+(depends-on "pallet")
+(depends-on "s")
+(depends-on "shut-up")
+(depends-on "go-mode")
+(depends-on "flycheck")
+(depends-on "go-autocomplete")
+(depends-on "dash-at-point")
+(depends-on "ggtags")
+(depends-on "helm-gtags")
