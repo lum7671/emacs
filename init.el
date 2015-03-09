@@ -380,10 +380,10 @@
 (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t) ; Org-mode's repository
 
 
-(add-to-list 'load-path "/Volumes/PDS/Emacs/auto-complete-1.3.1")
-(require 'auto-complete)
-(require 'auto-complete-config)
-(define-key ac-mode-map (kbd "M-TAB") 'auto-complete)
+;(add-to-list 'load-path "/Volumes/PDS/Emacs/auto-complete-1.3.1")
+;(require 'auto-complete)
+;(require 'auto-complete-config)
+;(define-key ac-mode-map (kbd "M-TAB") 'auto-complete)
 
 ; (add-to-list 'load-path "~/Library/Preferences/Aquamacs Emacs/Packages/elpa/go-autocomplete-20141210.1904/")
 ; (require 'go-autocomplete)
@@ -412,10 +412,10 @@
 ; (source gnu)
 ; (source melpa) ;;archive of VCS snapshots built automatically from upstream repositories
 
-(require 'cask "~/.emacs.d/.cask/24.4.1/elpa/cask-20150109.621/cask.el")
+(require 'cask "~/.cask/cask.el")
 (cask-initialize)
 (require 'pallet)
 (pallet-mode t)
 
-(mapc 'load (directory-files "~/.emacs.d/customizations" t "^[0-9]+.*\.el$"))
+; (mapc 'load (directory-files "~/.emacs.d/customizations" t "^[0-9]+.*\.el$"))
 

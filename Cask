@@ -25,3 +25,5 @@
 (depends-on "markdown-toc")
 (depends-on "md-readme")
 (depends-on "mkdown")
+(depends-on "graphene" "20141030.219")
+(depends-on "pallet" :git "https://github.com/rdallasgray/pallet" :ref "master")
