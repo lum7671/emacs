@@ -9,7 +9,7 @@
 
 
 
-(require 'cask "~/.emacs.d/.cask/24.5.1/elpa/cask-20151123.528/cask.el")
+(require 'cask "/usr/local/share/emacs/site-lisp/cask/cask.el")
 (cask-initialize)
 
 (let ((default-directory "/usr/local/share/emacs/site-lisp/"))
@@ -226,7 +226,6 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(column-number-mode t)
- '(cua-mode t nil (cua-base))
  '(font-use-system-font t)
  '(show-paren-mode t))
 (custom-set-faces
@@ -361,7 +360,7 @@ vi style of % jumping to matching brace."
 ;; Global font-lock mode 
 (global-font-lock-mode 1) 
 ;; 
-(init-loader-load "~/.emacs.d/init-loader/")
+;(init-loader-load "~/.emacs.d/init-loader/")
 
 ;; Pymacs
 (autoload 'pymacs-apply "pymacs")
@@ -378,3 +377,7 @@ vi style of % jumping to matching brace."
 (require 'package)
 (add-to-list 'package-archives
              '("elpy" . "http://jorgenschaefer.github.io/packages/"))
+
+(setenv "PATH" "/usr/local/bin:/usr/bin:/bin:/Volumes/PDS/SystemRoot/usr/local/bin:/Volumes/PDS/SystemRoot/usr/local/sbin")
+(setq exec-path (split-string (getenv "PATH") path-separator))
+
