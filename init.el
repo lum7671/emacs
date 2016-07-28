@@ -227,6 +227,9 @@
  ;; If there is more than one, they won't work right.
  '(column-number-mode t)
  '(font-use-system-font t)
+ '(package-selected-packages
+   (quote
+	(markdown-mode helm-gtags go-impl go-errcheck go-eldoc go-autocomplete git-commit git-command git-auto-commit-mode git flymake-go diff-hl)))
  '(show-paren-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
