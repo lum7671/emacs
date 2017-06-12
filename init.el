@@ -9,7 +9,7 @@
 
 
 
-(require 'cask "/usr/local/share/emacs/site-lisp/cask/cask.el")
+(require 'cask "$HOME/.cask/cask.el")
 (cask-initialize)
 
 (let ((default-directory "/usr/local/share/emacs/site-lisp/"))
@@ -349,11 +349,11 @@ vi style of % jumping to matching brace."
 ;;(osx-key-mode -1)  ; no Mac-specific key bindings
 ;; (setq x-alt-keysym 'meta)
 ;; key bindings
-(when (eq system-type 'darwin) ;; mac specific settings
-  (setq mac-option-modifier 'alt)
-  (setq mac-command-modifier 'meta)
-  (global-set-key [kp-delete] 'delete-char) ;; sets fn-delete to be right-delete
-  )
+;(when (eq system-type 'darwin) ;; mac specific settings
+;  (setq mac-option-modifier 'alt)
+;  (setq mac-command-modifier 'meta)
+;  (global-set-key [kp-delete] 'delete-char) ;; sets fn-delete to be right-delete
+;  )
 
 ;; If you want to use the option key to enter special characters (such as £) instead of functioning as Alt of Meta, you can specify this in your ~/.emacs:
 ; (setq mac-option-modifier nil)

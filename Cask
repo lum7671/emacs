@@ -65,6 +65,7 @@
 (depends-on "go-errcheck")
 (depends-on "go-impl")
 (depends-on "flymake-go")
+(depends-on "mastodon")
 ; (depends-on "golint")
 ; (depends-on "gore-mode")
 ; (depends-on "go-playground")
