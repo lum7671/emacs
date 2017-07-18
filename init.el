@@ -413,8 +413,6 @@ vi style of % jumping to matching brace."
 ;; https://github.com/jorgenschaefer/elpy
 (package-initialize)
 ; (elpy-enable)
-
-(package-initialize)
 (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/"))
 (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"))
 (add-to-list 'package-archives '("melpa-stable" . "http://melpa-stable.milkbox.net/packages/"))
