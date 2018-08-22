@@ -412,7 +412,7 @@ vi style of % jumping to matching brace."
 
 ;; https://github.com/jorgenschaefer/elpy
 (package-initialize)
-; (elpy-enable)
+(elpy-enable)
 (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/"))
 (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"))
 (add-to-list 'package-archives '("melpa-stable" . "http://melpa-stable.milkbox.net/packages/"))
@@ -424,3 +424,5 @@ vi style of % jumping to matching brace."
 (setenv "PATH" "/usr/local/bin:/usr/bin:/bin:/Volumes/PDS/SystemRoot/usr/local/bin:/Volumes/PDS/SystemRoot/usr/local/sbin")
 (setq exec-path (split-string (getenv "PATH") path-separator))
 
+(setq python-shell-interpreter "ipython"
+	  python-shell-interpreter-args "-i")
