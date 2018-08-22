@@ -16,7 +16,7 @@
   (normal-top-level-add-subdirs-to-load-path))
 
 ;; Some people have reported problems when pasting from other OS X applications if they have set the command key as Meta, because Emacs always uses its internal killring for C-y etc. You may merge the Emacs kill-ring with the clipboard via:
-(setq x-select-enable-clipboard t)
+(setq select-enable-clipboard t)
 
 
 ;; ;; =============================================================================
