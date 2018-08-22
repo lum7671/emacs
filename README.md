@@ -5,4 +5,7 @@ lum7671's Cask
 % git clone https://github.com/lum7671/emacs.git ~/.emacs.d
 % cd ~/.emacs.d
 % cask
+
+# $HOME/.emacs 추가
+% cp -vf dot.emacs ~/.emacs
 ```
