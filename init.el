@@ -3,15 +3,6 @@
 ;;
 
 
-;(setq default-directory "~/.emacs.d")
-;(setq user-emacs-directory "~/.emacs.d/lisp")
-;(setq diary-file "~/.emacs.d/diary")
-
-
-
-(require 'cask "$HOME/.cask/cask.el")
-(cask-initialize)
-
 (let ((default-directory "/usr/local/share/emacs/site-lisp/"))
   (normal-top-level-add-subdirs-to-load-path))
 
@@ -19,50 +10,9 @@
 (setq select-enable-clipboard t)
 
 
-;; ;; =============================================================================
-;; ;; Emacs 25.x xwidget-webkit, Web Browser
-;; ;; =============================================================================
-;; 
-;; ;; make these keys behave like normal browser
-;; (define-key xwidget-webkit-mode-map [mouse-4] 'xwidget-webkit-scroll-down)
-;; (define-key xwidget-webkit-mode-map [mouse-5] 'xwidget-webkit-scroll-up)
-;; (define-key xwidget-webkit-mode-map (kbd "<up>") 'xwidget-webkit-scroll-down)
-;; (define-key xwidget-webkit-mode-map (kbd "<down>") 'xwidget-webkit-scroll-up)
-;; (define-key xwidget-webkit-mode-map (kbd "M-w") 'xwidget-webkit-copy-selection-as-kill)
-;; (define-key xwidget-webkit-mode-map (kbd "C-c") `xwidget-webkit-copy-selection-as-kill)
-;; 
-;; ;; adapt webkit according to window configuration chagne automatically
-;; ;; without this hook, every time you change your window configuration,
-;; ;; you must press 'a' to adapt webkit content to new window size
-;; (add-hook 'window-configuration-change-hook (lambda ()
-;; 					      (when (equal major-mode 'xwidget-webkit-mode)
-;; 						(xwidget-webkit-adjust-size-dispatch))))
-;; 
-;; ;; by default, xwidget reuses previous xwidget window,
-;; ;; thus overriding your current website, unless a prefix argument
-;; ;; is supplied
-;; ;;
-;; ;; This function always opens a new website in a new window
-;; (defun xwidget-browse-url-no-reuse (url &optional sessoin)
-;;   (interactive (progn
-;;                  (require 'browse-url)
-;;                  (browse-url-interactive-arg "xwidget-webkit URL: "
-;;                                              )))
-;;   (xwidget-webkit-browse-url url t))
-;; 
-;; ;; make xwidget default browser
-;; (setq browse-url-browser-function (lambda (url session)
-;; 				    (other-window 1)
-;; 				    (xwidget-browse-url-no-reuse url)))
-;;
-
 ;; =============================================================================
 ;; 새로운 프레임 생성시 크기 설정
 ;; =============================================================================
-(setq initial-frame-alist '((width . 120) (height . 75))) ;; 첫번째 프래임의 크기를 설정
-(setq default-frame-alist '((width . 80) (height . 40))) ;; 그 다음 프래임의 크기를 설정
-
-;; (setq load-path (nconc '("~/.emacs") load-path))	;; 개인 lisp 패키지가 위치 할 load-path 설정
 (setq load-path (nconc '("~/.emacs.d/lisp") load-path))	;; 개인 lisp 패키지가 위치 할 load-path 설정
 (setq load-path (nconc '("/usr/local/opt/global/share/gtags") load-path))
 ; (setq load-path (nconc '("/Volumes/PDS/Users/x/Works/ggtags") load-path))
@@ -79,11 +29,6 @@
 
 (global-set-key [C-f1] 'show-file-name) ; Or any other key you want
 
-; for cscope
-; (require 'xcscope)
-(require 'gtags)
-;(require 'ggtags)
-(setq cscope-do-not-update-database t)
 
 ;; =============================================================================
 ;; person info
@@ -116,7 +61,7 @@
 (defun reload-dotemacs ()
   "Reload .emacs"
   (interactive)
-  (load-file "~/.emacs.el"))
+  (load-file "~/.emacs"))
 
 ; for emacsclient
 (server-start)
@@ -264,10 +209,12 @@
  ;; If there is more than one, they won't work right.
  '(column-number-mode t)
  '(font-use-system-font t)
+ '(global-display-line-numbers-mode t)
  '(package-selected-packages
    (quote
-	(markdown-mode helm-gtags go-impl go-errcheck go-eldoc go-autocomplete git-commit git-command git-auto-commit-mode git flymake-go diff-hl)))
- '(show-paren-mode t))
+    (markdown-mode helm-gtags go-impl go-errcheck go-eldoc go-autocomplete git-commit git-command git-auto-commit-mode git flymake-go diff-hl)))
+ '(show-paren-mode t)
+ '(size-indication-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -275,10 +222,6 @@
  ;; If there is more than one, they won't work right.
  '(default ((t (:family "Hack" :foundry "unknown" :slant normal :weight normal :height 120 :width normal)))))
 
-(add-to-list 'load-path "~/.emacs.d/.cask/24.5.1/elpa/dash-at-point-20140626.35")
-(autoload 'dash-at-point "dash-at-point"
-  "Search the word at point with Dash." t nil)
-(global-set-key "\C-cd" 'dash-at-point)
 
 ;; ================================================================================
 ;; 검색및 치환을 할때 찾은 문자열을 표시되게 함
@@ -360,8 +303,6 @@ vi style of % jumping to matching brace."
 
 ;; if you instead decide to leave osx-key-mode on:
 
-
-(add-hook 'java-mode-hook (function cscope:hook))
 
 (when (eq system-type 'darwin)
 
