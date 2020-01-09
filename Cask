@@ -92,6 +92,8 @@
 (depends-on "pkg-info")
 (depends-on "plantuml-mode")
 (depends-on "popwin")
+(depends-on "polymode")
+(depends-on "poly-markdown")
 (depends-on "prodigy")
 (depends-on "projectile")
 (depends-on "py-autopep8")

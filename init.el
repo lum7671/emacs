@@ -10,9 +10,6 @@
 (setq select-enable-clipboard t)
 
 
-;; =============================================================================
-;; 새로운 프레임 생성시 크기 설정
-;; =============================================================================
 (setq load-path (nconc '("~/.emacs.d/lisp") load-path))	;; 개인 lisp 패키지가 위치 할 load-path 설정
 (setq load-path (nconc '("/usr/local/opt/global/share/gtags") load-path))
 ; (setq load-path (nconc '("/Volumes/PDS/Users/x/Works/ggtags") load-path))
@@ -367,3 +364,28 @@ vi style of % jumping to matching brace."
 
 (setq python-shell-interpreter "ipython"
 	  python-shell-interpreter-args "-i")
+
+(require 'mmm-mode)
+(setq mmm-global-mode 'maybe)
+
+(defun my-mmm-markdown-auto-class (lang &optional submode)
+  "Define a mmm-mode class for LANG in `markdown-mode' using SUBMODE.
+If SUBMODE is not provided, use `LANG-mode' by default."
+  (let ((class (intern (concat "markdown-" lang)))
+        (submode (or submode (intern (concat lang "-mode"))))
+        (front (concat "^```" lang "[\n\r]+"))
+        (back "^```"))
+    (mmm-add-classes (list (list class :submode submode :front front :back back)))
+    (mmm-add-mode-ext-class 'markdown-mode nil class)))
+
+;; Mode names that derive directly from the language name
+(mapc 'my-mmm-markdown-auto-class
+      '("awk" "bibtex" "c" "cpp" "css" "html" "latex" "lisp" "makefile"
+        "markdown" "python" "r" "ruby" "sql" "stata" "xml"))
+
+
+(setq mmm-parse-when-idle 't)
+
+(global-set-key (kbd "C-c m") 'mmm-parse-buffer)
+
+
