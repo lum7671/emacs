@@ -1,53 +1,255 @@
-; (server-start)
+;;
+;; My own setting
+;;
 
-;; Cask
-(require 'cask "/Users/1001028/.emacs.d/.cask/26.1/elpa/cask-20180626.1949/cask.elc")
+(require 'cask "$HOME/.cask/cask.el")
 (cask-initialize)
 
+; (setq load-path (nconc '("~/.emacs") load-path))	;; 개인 lisp 패키지가 위치 할 load-path 설정
+; (setq load-path (nconc '("~/.emacs.d/lisp") load-path))	;; 개인 lisp 패키지가 위치 할 load-path 설정
 
-(let ((default-directory  "~/.emacs.d/.cask"))
-  (normal-top-level-add-subdirs-to-load-path))
+(add-to-list 'load-path "~/.emacs.d/lisp/")
+;(require 'edit-server)
+;(edit-server-start)
+(when (locate-library "edit-server")
+  (require 'edit-server)
+  (setq edit-server-new-frame nil)
+  (edit-server-start))
 
+(add-hook 'edit-server-start-hook 'markdown-mode)
+
+(autoload 'edit-server-maybe-dehtmlize-buffer "edit-server-htmlize" "edit-server-htmlize" t)
+(autoload 'edit-server-maybe-htmlize-buffer   "edit-server-htmlize" "edit-server-htmlize" t)
+(add-hook 'edit-server-start-hook 'edit-server-maybe-dehtmlize-buffer)
+(add-hook 'edit-server-done-hook  'edit-server-maybe-htmlize-buffer)
+
+
+(require 'npy)
+(npy-initialize)
+
+
+(require 'xcscope)
+(define-key global-map [(control f3)]  'cscope-set-initial-directory)
+(define-key global-map [(control f4)]  'cscope-unset-initial-directory)
+(define-key global-map [(control f5)]  'cscope-find-this-symbol)
+(define-key global-map [(control f6)]  'cscope-find-global-definition)
+(define-key global-map [(control f7)]
+  'cscope-find-global-definition-no-prompting)
+(define-key global-map [(control f8)]  'cscope-pop-mark)
+(define-key global-map [(control f9)]  'cscope-history-forward-line)
+(define-key global-map [(control f10)] 'cscope-history-forward-file)
+(define-key global-map [(control f11)] 'cscope-history-backward-line)
+(define-key global-map [(control f12)] 'cscope-history-backward-file)
+(define-key global-map [(meta f9)]  'cscope-display-buffer)
+(define-key global-map [(meta f10)] 'cscope-display-buffer-toggle)
+
+;; =============================================================================
+
+
+(setq frame-title-format
+      (list (format "%s %%S: %%j " (system-name))
+        '(buffer-file-name "%f" (dired-directory dired-directory "%b"))))
+
+(defun set-win-key-bindings ()
+  "Windows Keyboard key bindings"
+  (interactive)
+  (setq mac-option-modifier 'alt)
+  (setq mac-command-modifier 'meta)
+  (global-set-key [kp-delete] 'delete-char) ;; sets fn-delete to be right-delete
+  )
+
+(defun show-file-name ()
+  "Show the full path file name in the minibuffer."
+  (interactive)
+  (message (buffer-file-name)))
+
+(global-set-key [C-f1] 'show-file-name) ; Or any other key you want
+
+; for cscope
+; (require 'xcscope)
+; (setq cscope-do-not-update-database t)
+; (add-hook 'java-mode-hook (function cscope:hook))
+;
+; (require 'hanja-util)
+
+;; =============================================================================
+;; person info
+;; =============================================================================
+(setq user-full-name "Nate Doohyun Jang")
+(setq user-mail-address "dh.jang@gmail.com")
 
 ;; =============================================================================
 ;; 기본 색 지정
 ;; =============================================================================
+(set-foreground-color "wheat")
+(set-background-color "DarkSlateGray")
 
-;; Added by Package.el.  This must come before configurations of
-;; installed packages.  Don't delete this line.  If you don't want it,
-;; just comment it out by adding a semicolon to the start of the line.
-;; You may delete these explanatory comments.
-(package-initialize)
+;; =============================================================================
+;; 영역 색 지정
+;; =============================================================================
+(set-face-foreground 'region "white")
+(set-face-background 'region "cadetblue")
 
-;; Some people have reported problems when pasting from other OS X applications if they have set the command key as Meta, because Emacs always uses its internal killring for C-y etc. You may merge the Emacs kill-ring with the clipboard via:
-(setq x-select-enable-clipboard t)
+;; =============================================================================
+;; 한글 세벌식 최종
+;; =============================================================================
+;; (require 'hangul)
+(set-input-method "korean-hangul3f") ;; if you want 3 beolsik final...
+;; (utf-translate-cjk-mode 1)
+(prefer-coding-system 'utf-8)
+
+;;모드라인에 현재 커서의 줄과 칼럼위치 시간 표시('mode line hacking'때문에 필요 없음)
+(setq column-number-mode t)             ;;컬럼수를 모드라인에 표시할 경우 에디팅 속도가 느려진다
+
+;; function to reload .emacs 2008.01.24
+;; 출처 : http://hermian.tistory.com/195
+(defun reload-dotemacs ()
+  "Reload .emacs"
+  (interactive)
+  (load-file "~/.emacs.el"))
+
+; for emacsclient
+(server-start)
+
+;; Switch fromm *.<impl> to *.<head> and vice versa
+(defun switch-cc-to-h ()
+  (interactive)
+  (when (string-match "^\\(.*\\)\\.\\([^.]*\\)$" buffer-file-name)
+	(let ((name (match-string 1 buffer-file-name))
+		  (suffix (match-string 2 buffer-file-name)))
+	  (cond ((string-match suffix "c\\|cc\\|C\\|cpp")
+			 (cond ((file-exists-p (concat name ".h"))
+					(find-file (concat name ".h"))
+					)
+				   ((file-exists-p (concat name ".hh"))
+					(find-file (concat name ".hh"))
+					)
+				   ))
+			((string-match suffix "h\\|hh")
+			 (cond ((file-exists-p (concat name ".cc"))
+					(find-file (concat name ".cc"))
+					)
+				   ((file-exists-p (concat name ".C"))
+					(find-file (concat name ".C"))
+					)
+				   ((file-exists-p (concat name ".cpp"))
+					(find-file (concat name ".cpp"))
+					)
+				   ((file-exists-p (concat name ".c"))
+					(find-file (concat name ".c"))
+					)))))))
+
+;; ================================================================================
+;; auto mode alist
+;; ================================================================================
+;;(setq-default auto-fill-function 'do-auto-fill)		;; auto-fill모드 설정
+(autoload 'x-resource-generic-mode "generic-x" nil t)	;; generic-x 모드 설정
+(setq auto-mode-alist
+      (nconc '(("\\.ml[iylp]?\\'" . caml-mode)
+               ("\\.sml\\'" . sml-mode)
+               ("\\.grm\\'" . sml-mode)
+               ("\\.ML\\'" . sml-mode)
+               ("\\.htm\\'" . html-helper-mode)
+               ("\\.html\\'" . html-helper-mode)
+               ("\\.shtml\\'" . html-helper-mode)
+               ("\\.thtml\\'" . html-helper-mode)
+               ("\\.css\\'" . css-mode)
+               ("\\.php\\'" . php-mode)
+               ("\\.php3\\'" . php-mode)
+               ("\\.gnus\\'" . emacs-lisp-mode)
+               ("\\.abbrev_defs\\'" . emacs-lisp-mode)
+               ("\\el\\'" . emacs-lisp-mode)
+               ("\\.s?html\\'" . sgml-mode)
+               ("\\.sgml\\'" . sgml-mode)
+               ("\\.tex\\'" . latex-mode)
+               ("\\.ks$\\'" . latex-mode)
+               ("\\.cl\\'" . lisp-mode)
+               ("\\.cgi\\'" . cperl-mode)
+               ("\\.pl\\'" . cperl-mode)
+               ("\\.pm\\'" . cperl-mode)
+               ("\\.py\\'" . phthon-mode)
+               ("\\.c\\'" . c-mode)
+               ("\\.C\\'" . c-mode)
+               ("\\.cc\\'" . c++-mode)
+               ("\\.cpp\\'" . c++-mode)
+               ("\\.h\\'" . c++-mode)
+               ("\\.hh\\'" . c++-mode)
+               ("\\.idl\\'" . c++-mode)
+               ("\\.txi\\'" . Texinfo-mode)
+               ("\\.java\\'" . java-mode)
+               ("\\.prolog\\'" . prolog-mode)
+               ("\\.pro\\'" . prolog-mode)
+               ("\\.txt\\'" . text-mode))
+             auto-mode-alist))
+
+;; ================================================================================
+;; C mode
+;; ================================================================================
+(add-hook 'c-mode-common-hook
+          '(lambda()
+            (c-set-style "k&r") ;;C 코딩 스타일 정의
+			(gtags-mode 1)
+			(when (derived-mode-p 'c-mode 'c++-mode 'java-mode)
+              (ggtags-mode 1))
+))
+
+(add-hook 'c++-mode-common-hook
+          '(lambda()
+            (c-set-style "k&r") ;;C 코딩 스타일 정의
+			(gtags-mode 1)
+			(when (derived-mode-p 'c-mode 'c++-mode 'java-mode)
+              (ggtags-mode 1))
+))
+
+;; revert buffer. 파일 내용이나 디렉토리 내용이 바뀌어서 Disk의 내용을 다시 불러올때
+;; g : dired 모드에서 사용
+;; M-x revert-buffer RET yes RET
+;; C-x C-v RET		
+
+(defun revert-all-buffers()
+  "Refreshs all open buffers from their respective files"
+  (interactive)
+  (let* ((list (buffer-list))
+		 (buffer (car list)))
+	(while buffer
+	  (if (string-match "\\*" (buffer-name buffer)) 
+	      (progn
+	        (setq list (cdr list))
+	        (setq buffer (car list)))
+		(progn
+		  (set-buffer buffer)
+		  (revert-buffer t t t)
+		  (setq list (cdr list))
+		  (setq buffer (car list))))))
+  (message "Refreshing open files"))
+
+;; ================================================================================
+;; show paren mode. 괄호등을 사용할때 마지막에 사용된 괄호에 대응하는 괄호를 찾음
+;; ================================================================================
+(show-paren-mode 1)
 
 
-(when (eq system-type 'darwin)
+(setq enable-recursive-minibuffers t)
 
-  ;; default Latin font (e.g. Consolas)
-  (set-face-attribute 'default nil :family "Hack")
 
-  ;; default font size (point * 10)
-  ;;
-  ;; WARNING!  Depending on the default font,
-  ;; if the size is not supported very well, the frame will be clipped
-  ;; so that the beginning of the buffer may not be visible correctly.
-  (set-face-attribute 'default nil :height 120)
-
-  ;; use specific font for Korean charset.
-  ;; if you want to use different font size for specific charset,
-  ;; add :size POINT-SIZE in the font-spec.
-  (set-fontset-font t 'hangul (font-spec :name "NanumGothicCoding"))
-
-  ;; you may want to add different for other charset in this way.
-  )
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:family "Hack" :foundry "unknown" :slant normal :weight normal :height 120 :width normal)))))
+;; ================================================================================
+;; ;;indent with just spaces 들여쓰기 설정
+;; ================================================================================
+;;(setq-default indent-tabs-mode nil)   ;; nil 이 아니면 들여쓰기 명령이 탭문자를 입력한다.(버퍼지역변수)
+(setq-default indent-tabs-mode t)		;; nil 이 아니면 들여쓰기 명령이 탭문자를 입력한다.(버퍼지역변수)
+(setq tab-stop-list '(4 8 12 16 20 24 28 32 26 40 44 48 52 56 60 64 68 72 76 80 84 88 92 96 100 104 108 112 116 120))
+(setq default-tab-width 4)              ;; 탭간 간격(버퍼지역변수)
+;; automatically indenting yanked text if in programming-modes
+;; 붙여넣기 하면서 자동 들여쓰기 함수
+(defadvice yank (after indent-region activate)
+  (if (member major-mode '(emacs-lisp-mode
+                           c-mode c++-mode
+                           tcl-mode sql-mode
+                           perl-mode cperl-mode
+                           java-mode jde-mode
+                           LaTeX-mode TeX-mode))
+	  (let ((transient-mark-mode nil))
+		(indent-region (region-beginning) (region-end) nil))))
 
 
 (require 'ansi-color)
@@ -69,9 +271,9 @@
 (setq python-shell-interpreter "ipython"
       python-shell-interpreter-args "-i --simple-prompt")
 
-;(setenv "LC_CTYPE" "UTF-8")
-;(setenv "LC_ALL" "en_US.UTF-8")
-;(setenv "LANG" "en_US.UTF-8")
+					;(setenv "LC_CTYPE" "UTF-8")
+					;(setenv "LC_ALL" "en_US.UTF-8")
+					;(setenv "LANG" "en_US.UTF-8")
 
 (setenv "LANG" "ko_KR.UTF-8")
 (setenv "LC_ALL" "ko_KR.UTF-8")
@@ -82,7 +284,7 @@
 (setenv "LC_NUMERIC" "ko_KR.UTF-8")
 (setenv "LC_TIME" "ko_KR.UTF-8")
 
-;(elpy-enable)
+					;(elpy-enable)
 
 (autoload 'python-mode "python-mode" "Python Mode." t)
 (add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
@@ -126,8 +328,153 @@
  '(show-paren-mode t)
  '(size-indication-mode t))
 
+;; http://www.emacswiki.org/emacs/CollectionOfEmacsDevelopmentEnvironmentTools
+;; 6. While I was at it, I installed Exuberant Ctags using MacPorts and enabled it in CEDET::
+;;
+;(semantic-load-enable-primary-exuberent-ctags-support)
+
+;(require 'semantic/ia)
+;(require 'semantic/bovine/gcc)
+
+; (load-file "/Applications/MacPorts/EmacsMac.app/Contents/Resources/lisp/cedet/cedet.elc")
+;(global-ede-mode 1)                      ; Enable the Project management system
+;(require 'semantic/sb)
+;(semantic-mode 1)
+; (semantic-load-enable-code-helpers)      ; Enable prototype help and smart completion 
+; (global-srecode-minor-mode 1)            ; Enable template insertion menu
+
+;(setq-mode-local c-mode semanticdb-find-default-throttle
+;                 '(project unloaded system recursive))
+
+
+;; if you want to enable support for gnu global
+;(when (cedet-gnu-global-version-check t)
+;  (semanticdb-enable-gnu-global-databases 'c-mode)
+;  (semanticdb-enable-gnu-global-databases 'c++-mode))
+
+;; enable ctags for some languages:
+;;  Unix Shell, Perl, Pascal, Tcl, Fortran, Asm
+;(when (cedet-ectag-version-check)
+;  (semantic-load-enable-primary-exuberent-ctags-support))
+
+(add-to-list 'load-path "/Users/x/.emacs/dash-at-point")
+(autoload 'dash-at-point "dash-at-point"
+  "Search the word at point with Dash." t nil)
+(global-set-key "\C-cd" 'dash-at-point)
+
+;(add-to-list 'dash-at-point-mode-alist '(perl-mode . "perl"))
+;(add-to-list 'dash-at-point-mode-alist '(c++-mode . "cpp"))
+;(add-to-list 'dash-at-point-mode-alist '(c-mode . "c"))
+
+;(add-hook 'rinari-minor-mode-hook
+;          (lambda () (setq dash-at-point-docset "rails")))
+
+;; like vi's %
+;; By an unknown contributor
+
+(global-set-key "%" 'match-paren)
+
+(defun match-paren (arg)
+  "Go to the matching paren if on a paren; otherwise insert %."
+  (interactive "p")
+  (cond ((looking-at "\\s\(") (forward-list 1) (backward-char 1))
+		((looking-at "\\s\)") (forward-char 1) (backward-list 1))
+		(t (self-insert-command (or arg 1)))))
+
+;; ISO 8601 Format yyyy-mm-dd, http://ergoemacs.org/emacs/elisp_datetime.html 
+(defun insert-date ()
+  "Insert current date yyyy-mm-dd."
+  (interactive)
+  (when (region-active-p)
+    (delete-region (region-beginning) (region-end) )
+    )
+  (insert (format-time-string "%Y-%m-%d"))
+  )
+
+;; example of setting env var named “path”, by appending a new path to existing path
+(setenv "PATH"
+		(concat
+		 "/usr/local/bin" ":"
+		 "/usr/local/sbin" ":"
+		 (getenv "PATH")
+		 )
+		)
+
+(setq tramp-default-method "ssh")
+
+;; for gtags
+
+(autoload 'gtags-mode "gtags" "" t)
+
+(add-hook 'gtags-mode-hook
+  '(lambda ()
+     (define-key gtags-mode-map "\C-f" 'scroll-up)
+     (define-key gtags-mode-map "\C-b" 'scroll-down)
+))
+
+(add-hook 'gtags-select-mode-hook
+  '(lambda ()
+     (setq hl-line-face 'underline)
+     (hl-line-mode 1)
+))
+
+(setq gtags-suggested-key-mapping t)
+(setq gtags-auto-update t)
+
+(require 'tabbar)
+(tabbar-mode t)
+(setq tabbar-cycle-scope 'tabs)
+(setq tabbar-buffer-groups-function
+      (lambda ()
+	(let ((dir (expand-file-name default-directory)))
+	  (cond ((member (buffer-name) '("*Completions*"
+					 "*scratch*"
+					 "*Messages*"
+					 "*Ediff Registry*"))
+		 (list "#misc"))
+		((string-match-p "/.emacs.d/" dir)
+		 (list ".emacs.d"))
+		(t (list dir))))))
+
+;; =============================================================================
+;; 새로운 프레임 생성시 크기 설정
+;; =============================================================================
+(setq initial-frame-alist '((width . 160) (height . 100))) ;; 첫번째 프래임의 크기를 설정
+(setq default-frame-alist '((width . 160) (height . 100))) ;; 그 다음 프래임의 크기를 설정
+
+(require 'mmm-mode)
+(setq mmm-global-mode 'maybe)
+
+(defun my-mmm-markdown-auto-class (lang &optional submode)
+  "Define a mmm-mode class for LANG in `markdown-mode' using SUBMODE.
+If SUBMODE is not provided, use `LANG-mode' by default."
+  (let ((class (intern (concat "markdown-" lang)))
+        (submode (or submode (intern (concat lang "-mode"))))
+        (front (concat "^```" lang "[\n\r]+"))
+        (back "^```"))
+    (mmm-add-classes (list (list class :submode submode :front front :back back)))
+    (mmm-add-mode-ext-class 'markdown-mode nil class)))
+
+;; Mode names that derive directly from the language name
+(mapc 'my-mmm-markdown-auto-class
+      '("awk" "bibtex" "c" "cpp" "css" "html" "latex" "lisp" "makefile"
+        "markdown" "python" "r" "ruby" "sql" "stata" "xml"))
+
+;; Mode names that differ from the language name
+(my-mmm-markdown-auto-class "fortran" 'f90-mode)
+(my-mmm-markdown-auto-class "perl" 'cperl-mode)
+(my-mmm-markdown-auto-class "shell" 'shell-script-mode)
+
+(setq mmm-parse-when-idle 't)
+
+(global-set-key (kbd "C-c m") 'mmm-parse-buffer)
+
+(put 'downcase-region 'disabled nil)
+
+
 (require 'package)
 (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
 			 ("org" . "http://orgmode.org/elpa/")
                          ("marmalade" . "https://marmalade-repo.org/packages/")
                          ("melpa" . "https://melpa.org/packages/")))
+
