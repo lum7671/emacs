@@ -7,5 +7,5 @@ lum7671's Cask
 % cask
 
 # $HOME/.emacs 추가
-% cp -vf dot.emacs ~/.emacs
+% ln -svf $(pwd)/dot.emacs ~/.emacs
 ```
