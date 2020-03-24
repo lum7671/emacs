@@ -66,10 +66,10 @@
 (global-set-key [C-f1] 'show-file-name) ; Or any other key you want
 
 ; for cscope
-; (require 'xcscope)
-; (setq cscope-do-not-update-database t)
-; (add-hook 'java-mode-hook (function cscope:hook))
-;
+(require 'xcscope)
+(setq cscope-do-not-update-database t)
+(add-hook 'java-mode-hook (function cscope:hook))
+
 ; (require 'hanja-util)
 
 ;; =============================================================================
