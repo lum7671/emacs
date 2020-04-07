@@ -179,6 +179,7 @@
                ("\\.java\\'" . java-mode)
                ("\\.prolog\\'" . prolog-mode)
                ("\\.pro\\'" . prolog-mode)
+               ("\\.hql\\'" . sql-mode)
                ("\\.txt\\'" . text-mode))
              auto-mode-alist))
 
@@ -315,7 +316,6 @@
    ["#212526" "#ff4b4b" "#b4fa70" "#fce94f" "#729fcf" "#e090d7" "#8cc4ff" "#eeeeec"])
  '(blink-cursor-mode t)
  '(column-number-mode t)
- '(cua-mode t nil (cua-base))
  '(custom-enabled-themes (quote (wheatgrass)))
  '(default-input-method "korean-hangul3f")
  '(display-battery-mode t)
@@ -477,4 +477,22 @@ If SUBMODE is not provided, use `LANG-mode' by default."
 			 ("org" . "http://orgmode.org/elpa/")
                          ("marmalade" . "https://marmalade-repo.org/packages/")
                          ("melpa" . "https://melpa.org/packages/")))
+
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+(put 'upcase-region 'disabled nil)
+
+
+(add-to-list 'default-frame-alist '(font . "D2Coding-14" ))
+(set-face-attribute 'default t :font "D2Coding-14" )
+
+(require 'multiple-cursors)
+(global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+(global-set-key (kbd "C->") 'mc/mark-next-like-this)
+(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+(global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
 
